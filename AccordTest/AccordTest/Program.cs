@@ -11,6 +11,7 @@ using Accord.MachineLearning.Bayes;
 using System.Data;
 using Accord.Neuro;
 using Accord.Neuro.Learning;
+using System.IO;
 
 namespace AccordTest
 {
@@ -25,18 +26,29 @@ namespace AccordTest
             double[][] inputs = table.ToJagged<double>("X", "Y");
             int[] outputs = table.Columns["G"].ToArray<int>();
 
+
             // Since we would like to learn binary outputs in the form
             // [-1,+1], we can use a bipolar sigmoid activation function
             IActivationFunction function = new BipolarSigmoidFunction();
 
-            // In our problem, we have 2 inputs (x, y pairs), and we will 
-            // be creating a network with 5 hidden neurons and 1 output:
-            //
-            var network = new ActivationNetwork(function,
-                inputsCount: 2, neuronsCount: new[] { 10, 5, 1 });
+            Console.Write("Enter network name: ");
+            string networkName = Console.ReadLine();
+
+            Network network = null;
+
+            if (File.Exists(networkName))
+            {
+                network = Network.Load(networkName);
+            }
+            else
+            {
+                network = new ActivationNetwork(function,
+                    inputsCount: 2, neuronsCount: new[] { 10, 5, 1 });
+            }
+
 
             // Create a Levenberg-Marquardt algorithm
-            var teacher = new LevenbergMarquardtLearning(network)
+            var teacher = new LevenbergMarquardtLearning((ActivationNetwork)network)
             {
                 UseRegularization = true
             };
@@ -58,6 +70,8 @@ namespace AccordTest
                 error = teacher.RunEpoch(inputs, y);
 
             } while (Math.Abs(previous - error) > 1);
+
+            network.Save("test.nn");
 
 
             // Classify the samples using the model
