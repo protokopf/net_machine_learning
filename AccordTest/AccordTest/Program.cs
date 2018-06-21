@@ -44,7 +44,7 @@ namespace AccordTest
             // Because the network is expecting multiple outputs,
             // we have to convert our single variable into arrays
             //
-            double[][] y = outputs.ToDouble().ToArray();
+            double[][] y = outputs.ToDouble().ToJagged();
 
             // Iterate until stop criteria is met
             double error = double.PositiveInfinity;
