@@ -33,10 +33,10 @@ namespace AccordTest
             // be creating a network with 5 hidden neurons and 1 output:
             //
             var network = new ActivationNetwork(function,
-                inputsCount: 2, neuronsCount: new[] { 10, 10,  1 });
+                inputsCount: 2, neuronsCount: new[] { 10, 5, 1 });
 
             // Create a Levenberg-Marquardt algorithm
-            var teacher = new LevenbergMarquardtLearning(network, true)
+            var teacher = new LevenbergMarquardtLearning(network)
             {
                 UseRegularization = true
             };
@@ -57,7 +57,7 @@ namespace AccordTest
                 // Compute one learning iteration
                 error = teacher.RunEpoch(inputs, y);
 
-            } while (Math.Abs(previous - error) < 0.05);
+            } while (Math.Abs(previous - error) > 1);
 
 
             // Classify the samples using the model
