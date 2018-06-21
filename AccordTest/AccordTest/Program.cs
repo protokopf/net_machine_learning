@@ -71,7 +71,7 @@ namespace AccordTest
 
             } while (Math.Abs(previous - error) > 1);
 
-            network.Save("test.nn");
+            network.Save(networkName);
 
 
             // Classify the samples using the model
