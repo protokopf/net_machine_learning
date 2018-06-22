@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
+using System.IO;
 using Accord.Controls;
 using Accord.IO;
 using Accord.Math;
-using Accord.Statistics.Distributions.Univariate;
-using Accord.MachineLearning.Bayes;
-using System.Data;
 using Accord.Neuro;
 using Accord.Neuro.Learning;
-using System.IO;
 
 namespace AccordTest
 {
@@ -81,6 +75,73 @@ namespace AccordTest
             ScatterplotBox.Show("Expected results", inputs, outputs);
             ScatterplotBox.Show("Network results", inputs, answers)
             .Hold();
+        }
+
+        private static void EraseForRule(string ruleName)
+        {
+            //1. Remove network for rule.
+        }
+
+        private static void TrainForRule(string ruleName)
+        {
+            //1. Find network for this rule. Use it if exists. Create new if not. => Network object
+
+            //2. Request all interactions, that is related to the provided rule. => Interaction[]
+
+            //3. Extract contents from each interaction. 
+            //   If multiple interaction's content - combine to one string. => string[]
+
+            //4. Preprocess each content => string[]
+            //  4.1. Lowercase it
+            //  4.2. Replace all spaces with one space.
+
+            //5. Retrieve surrounding sentences for each rule match inside content Concatenate them. => string[]
+
+            //6. Extract words from contents. => map (word:count)[] for each interaction
+
+            //7. Find word list for this rule. Use it if exists. Create new if not => string[];
+            //   If not:
+            //      - Combine 'map (word:count)[]' from all interactions.
+            //      - Sort them by count descending
+            //      - Get first WORDS_SIZE words.
+            //      - Save to the file for the rule.
+
+            //8. Map each 'map (word:count)[]' to features (double[WORDS_SIZE])
+            //   where each double number of occurrence of each word. 
+
+            //9. Combine features of all interaction => (double[INTERACTIONS_COUNT][WORDS_SIZE])
+
+            //10. For each interaction find out whether rule for it was rejected or confirmed => double[INTERACTIONS_COUNT]
+
+            //11. Train network for prepared data. (M times)
+
+            //12. Save trained network.
+
+        }
+
+        private static double PredictForRule(string ruleName, string interactionIdenifier)
+        {
+            //1. Find network for this rule. Use it if exists. If now - throw exception.
+
+            //2. Extract interaction. => Interaction
+
+            //3. Extract contents for interaction => string;
+            //   If multiple interaction's content - combine to one string.
+
+            //4. Preprocess each content => string
+            //  4.1. Lowercase it
+            //  4.2. Replace all spaces with one space.
+
+            //5. Retrieve surrounding sentences for each rule match inside content Concatenate them. => string
+
+            //6. Extract words from contents. => map (word:count)[] for interaction
+
+            //7. Map 'map (word:count)[]' to features (double[WORDS_SIZE])
+            //   where each double number of occurrence of each word. 
+
+            //8. Use network to predict value.
+
+            return 0;
         }
     }
 }
