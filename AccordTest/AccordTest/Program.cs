@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 using Accord.Controls;
 using Accord.IO;
 using Accord.Math;
 using Accord.Neuro;
 using Accord.Neuro.Learning;
+using ZedGraph;
 
 namespace AccordTest
 {
@@ -49,12 +54,15 @@ namespace AccordTest
 
             // Because the network is expecting multiple outputs,
             // we have to convert our single variable into arrays
-            //
             double[][] y = outputs.ToDouble().ToJagged();
 
             // Iterate until stop criteria is met
             double error = double.PositiveInfinity;
             double previous;
+
+            Dictionary<int, double> epochError = new Dictionary<int, double>();
+
+            int currentEpoch = 1;
 
             do
             {
@@ -62,19 +70,50 @@ namespace AccordTest
 
                 // Compute one learning iteration
                 error = teacher.RunEpoch(inputs, y);
+                epochError.Add(currentEpoch++, error);
 
-            } while (Math.Abs(previous - error) > 1);
+            } while (Math.Abs(previous - error) > 0.001);
 
             network.Save(networkName);
 
 
             // Classify the samples using the model
-            int[] answers = inputs.Apply(network.Compute).GetColumn(0).Apply(Math.Sign);
+            double[] decimalAnswers = inputs.Apply(network.Compute).GetColumn(0); // can be used as probability.
+            int[] answers = decimalAnswers.Apply(Math.Sign);
 
             // Plot the results
             ScatterplotBox.Show("Expected results", inputs, outputs);
-            ScatterplotBox.Show("Network results", inputs, answers)
-            .Hold();
+            ScatterplotBox.Show("Network results", inputs, answers);
+
+            PlotError("Training error", epochError);
+        }
+
+        private static void PlotError(string errorName, Dictionary<int, double> epochsErrors)
+        {
+            double[] epochs = epochsErrors.Keys.Select(e => (double)e).ToArray();
+            double[] errors = epochsErrors.Values.ToArray();
+
+            ScatterplotView spv = new ScatterplotView
+            {
+                Dock = DockStyle.Fill,
+                LinesVisible = true
+            };
+
+            spv.Graph.GraphPane.XAxis.Title.Text = "Epoch";
+            spv.Graph.GraphPane.YAxis.Title.Text = "Error";
+            spv.Graph.GraphPane.Title.Text = "Error changing through epochs";
+
+            spv.Graph.GraphPane.AddCurve(errorName, epochs, errors, Color.Green, SymbolType.None);
+
+            spv.Graph.GraphPane.AxisChange();
+
+            Form f1 = new Form
+            {
+                Width = 600,
+                Height = 400
+            };
+            f1.Controls.Add(spv);
+            f1.ShowDialog();
         }
 
         private static void EraseForRule(string ruleName)
