@@ -80,6 +80,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Modules\IContentContextRetriever.cs" />
+    <Compile Include="Modules\IContentPreprocessor.cs" />
+    <Compile Include="Modules\IContentRetriever.cs" />
+    <Compile Include="Modules\IFeaturesRetriever.cs" />
+    <Compile Include="Modules\IRuleLabelsRetriever.cs" />
+    <Compile Include="Modules\IWordListRetriever.cs" />
+    <Compile Include="Modules\IWordsRetriever.cs" />
+    <Compile Include="Pipeline\ILearningPipeline.cs" />
+    <Compile Include="Pipeline\TestPipeline.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
