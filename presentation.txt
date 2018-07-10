@@ -26,9 +26,9 @@ But
  - ...
 - Could we automate and simplify this process a little bit?
 - One option would be to complicated rule query. But taking look at the context and making a decision, whether the rule should be confirmed - not the simple thing that can be expressed by rule query.
-Making such decisions - output of the reviewer's experience. But what if we could learn from this experience? 
-What if we could learn from tons of already reviewed interactions stored in the customers' databases and using learned models help reviewer to make such decisions?
+Making such decisions - output of the reviewer's experience. But what if we could learn from this experience?
+Review insights - is an attempt to do so! 
+Our customers already have plenty of reviewed data. We could use this data to teach supervision make predictions about macthed rule based on match context.
 And even more - update learning model each time review is finilazed to be in sync with reviewer experience?
-Review insights - is an attempt to do so!
- 
+
 
