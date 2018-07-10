@@ -1,0 +1,34 @@
+1) All we heard what typical complience officer's working looks like:
+- He has the communication surveillance - слайд с UI СS, но без плагина и списка плагинов (можно какое-то шуточное имя пользователя)
+- He has bunch of plugins installed - в слайд с UI CS добавляется список плагинов
+- He has some observe rules configured - в список добавляется Observe plugin
+- He has the review plugin opened - добавляется UI Review Plugin'a, но без правил
+- The last, but not the least - he has tons of interactions to review (голос должен быть серьезный) - добавляется список интеракшенов и открытые детали
+
+/*
+2) Начинает проигрываться видео в немного ускоренном варианте (не уверен, что Это нужно)
+- And now imagine, that a lot of matched rules can be false positive.
+- For example, -> показывается пример, где правило совпадает, но контекст совершенно другой. Например - simple_content = "Sir, match the word 'dangerous', please"
+- Looks like we could adress this issue by changing rule query -> сложное правило, которое совпадает с simple_content
+- But then we may have something false positive, that we did not expect - "Can you imagine, he has put "Sir, match the word 'dangerous', please" as an real example of content?!"
+- We could also complicated previous query. But jokes aside. The idea is that we can understand matched rule only from the context this rule has matched. 
+  (Картинка текста (в ревью плагине), в котором показан хайлайт, но вокруг контекст выделен красным)
+- Of course, we could update the rule query to also consider the context - картинка где меняется rule query на больший по размеру.
+But 
+
+*/
+
+- And what is the review algorythm?
+ - Take a look at the rule
+ - See the highlights 
+ - Take a look at the context
+ - Confirm or reject rule.
+ - ...
+- Could we automate and simplify this process a little bit?
+- One option would be to complicated rule query. But taking look at the context and making a decision, whether the rule should be confirmed - not the simple thing that can be expressed by rule query.
+Making such decisions - output of the reviewer's experience. But what if we could learn from this experience? 
+What if we could learn from tons of already reviewed interactions stored in the customers' databases and using learned models help reviewer to make such decisions?
+And even more - update learning model each time review is finilazed to be in sync with reviewer experience?
+Review insights - is an attempt to do so!
+ 
+
