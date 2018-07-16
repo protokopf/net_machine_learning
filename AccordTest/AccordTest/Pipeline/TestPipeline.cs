@@ -59,7 +59,7 @@ namespace AccordTest.Pipeline
 
                     string[] preprocessedContents = _preprocessor.PreprocessContents(rawContentsContext);
 
-                    Dictionary<int, string>[] interactionsWords = _wordsRetriever.RetrieveWords(preprocessedContents);
+                    CountedWord[] interactionsWords = _wordsRetriever.RetrieveWords(preprocessedContents);
 
                     // Word list should be savedfor rule as well as network.
                     string[] wordList = null; //Try retrieve  word list for rule from file system.

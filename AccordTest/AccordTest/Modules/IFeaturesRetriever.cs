@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AccordTest.Entities;
 
 namespace AccordTest.Modules
 {
@@ -7,6 +8,6 @@ namespace AccordTest.Modules
     /// </summary>
     public interface IFeaturesRetriever
     {
-        double[][] RetrieveFeatures(Dictionary<int, string>[] interactionsWords, string[] wordList);
+        double[][] RetrieveFeatures(CountedWord[] interactionsWords, string[] wordList);
     }
 }

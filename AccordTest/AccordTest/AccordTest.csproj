@@ -80,11 +80,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Policy.cs" />
+    <Compile Include="Entities\CountedWord.cs" />
     <Compile Include="Modules\IContentContextRetriever.cs" />
     <Compile Include="Modules\IContentPreprocessor.cs" />
     <Compile Include="Modules\IContentRetriever.cs" />
     <Compile Include="Modules\IFeaturesRetriever.cs" />
     <Compile Include="Modules\IRuleLabelsRetriever.cs" />
+    <Compile Include="Modules\IRuleQueriesRetriever.cs" />
     <Compile Include="Modules\IWordListRetriever.cs" />
     <Compile Include="Modules\IWordsRetriever.cs" />
     <Compile Include="Pipeline\ILearningPipeline.cs" />

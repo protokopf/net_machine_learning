@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AccordTest.Entities;
 
 namespace AccordTest.Modules
 {
@@ -7,6 +8,6 @@ namespace AccordTest.Modules
     /// </summary>
     public interface IWordListRetriever
     {
-        string[] RetrieveWordList(Dictionary<int, string>[] interactionsWords);
+        string[] RetrieveWordList(CountedWord[] interactionsWords);
     }
 }
