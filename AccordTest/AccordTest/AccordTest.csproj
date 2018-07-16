@@ -86,6 +86,7 @@
     <Compile Include="Modules\IContentPreprocessor.cs" />
     <Compile Include="Modules\IContentRetriever.cs" />
     <Compile Include="Modules\IFeaturesRetriever.cs" />
+    <Compile Include="Modules\INeuralNetworkManager.cs" />
     <Compile Include="Modules\IRuleLabelsRetriever.cs" />
     <Compile Include="Modules\IRuleQueriesRetriever.cs" />
     <Compile Include="Modules\IWordListManager.cs" />

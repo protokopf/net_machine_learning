@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Accord.Math;
+using Accord.Neuro;
+using Accord.Neuro.Learning;
 using AccordTest.Entities;
 using AccordTest.Modules;
 
@@ -75,10 +75,46 @@ namespace AccordTest.Pipeline
                         _wordListManager.Save(policy.Name, ruleName, wordList);
                     }
 
-                    double[][] features = _featuresRetriever.RetrieveFeatures(interactionsWords, wordList);
-                    double[] labels = _labelsRetriever.RetrieveRuleLabes(policy.Name, ruleName);
+                    double[][] inputs = _featuresRetriever.RetrieveFeatures(interactionsWords, wordList);
+                    double[] outputs = _labelsRetriever.RetrieveRuleLabes(policy.Name, ruleName);
 
-                    //Train here
+                    ActivationNetwork network = _nnManager.Get(policy.Name, ruleName);
+
+
+                    // Create a Levenberg-Marquardt algorithm
+                    var teacher = new LevenbergMarquardtLearning(network)
+                    {
+                        UseRegularization = true
+                    };
+
+                    // Because the network is expecting multiple outputs,
+                    // we have to convert our single variable into arrays
+
+                    //We should make sure outputs are [0...1]
+                    double[][] y = outputs.ToJagged();
+
+                    // Iterate until stop criteria is met
+                    double error = double.PositiveInfinity;
+                    double previous;
+
+                    Dictionary<int, double> epochError = new Dictionary<int, double>();
+
+                    int currentEpoch = 1;
+
+                    do
+                    {
+                        previous = error;
+
+                        // Compute one learning iteration
+                        error = teacher.RunEpoch(inputs, y);
+                        epochError.Add(currentEpoch++, error);
+
+                    } while (Math.Abs(previous - error) > 0.001);
+
+                    _nnManager.Save(network, policy.Name, ruleName);
+
+                    // Classify the samples using the model
+                    double[] decimalAnswers = inputs.Apply(network.Compute).GetColumn(0); // can be used as probability.
                 }
             }
         }
@@ -91,7 +127,7 @@ namespace AccordTest.Pipeline
 
             string[] queries = _queriesRetriever.RetrieveQueriesFor(policyName, ruleName);
 
-            string[] rawContents = _contentRetriever.RetrieveContents(queries);
+            string[] rawContents = _contentRetriever.RetrieveContents(queries, interactionId);
 
             string[] rawContentsContext = _contextRetriever.RetrieveContentContext(rawContents);
 
@@ -107,16 +143,27 @@ namespace AccordTest.Pipeline
                 _wordListManager.Save(policyName, ruleName, wordList);
             }
 
-            double[][] features = _featuresRetriever.RetrieveFeatures(interactionsWords, wordList);
-            double[] labels = _labelsRetriever.RetrieveRuleLabes(policyName, ruleName);
 
-            //Train here
-            return 1;
+            double[][] inputs = _featuresRetriever.RetrieveFeatures(interactionsWords, wordList);
+
+
+            ActivationNetwork network = _nnManager.Get(policy.Name, ruleName);
+
+
+            // Classify the samples using the model
+            //We should make sure decimalAnswers are [0...1]
+            double[] decimalAnswers = inputs.Apply(network.Compute).GetColumn(0); // can be used as probability.
+
+
+            return decimalAnswers[0];
         }
 
         public void Forget(Policy policy)
         {
-            throw new NotImplementedException();
+            foreach(string ruleName in policy.RuleNames)
+            {
+                _nnManager.Delete(policy.Name, ruleName);
+            }
         }
     }
 }
