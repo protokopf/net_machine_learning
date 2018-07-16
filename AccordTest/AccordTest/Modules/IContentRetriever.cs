@@ -5,6 +5,6 @@
     /// </summary>
     public interface IContentRetriever
     {
-        string[] RetrieveContents(string ruleName, string interactionId = null);
+        string[] RetrieveContents(string[] queries, string interactionId = null);
     }
 }

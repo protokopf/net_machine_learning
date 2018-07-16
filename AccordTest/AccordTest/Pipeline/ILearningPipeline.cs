@@ -1,4 +1,6 @@
-﻿namespace AccordTest.Pipeline
+﻿using AccordTest.Entities;
+
+namespace AccordTest.Pipeline
 {
     /// <summary>
     /// Interface to pipeline.
@@ -6,23 +8,23 @@
     public interface ILearningPipeline
     {
         /// <summary>
-        /// Trains model for specific rule.
+        /// Trains model for policies
         /// </summary>
-        /// <param name="ruleName"></param>
-        void Train(string ruleName);
+        /// <param name="policies"></param>
+        void Train(Policy[] policies);
 
         /// <summary>
-        /// Predict value for specific rule.
+        /// Predict value for specific policy
         /// </summary>
-        /// <param name="ruleName"></param>
+        /// <param name="policy"></param>
         /// <param name="interactionId"></param>
         /// <returns></returns>
-        double Predict(string ruleName, string interactionId);
+        double Predict(Policy policy, string interactionId);
 
         /// <summary>
-        /// Removes model for specific rule.
+        /// Removes model for specific policy
         /// </summary>
-        /// <param name="ruleName"></param>
-        void Forget(string ruleName);
+        /// <param name="policy"></param>
+        void Forget(Policy policy);
     }
 }
