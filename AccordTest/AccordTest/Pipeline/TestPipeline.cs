@@ -23,6 +23,7 @@ namespace AccordTest.Pipeline
         private readonly IWordListManager _wordListManager;
         private readonly IWordListRetriever _wordListRetriever;
         private readonly IFeaturesRetriever _featuresRetriever;
+        private readonly INeuralNetworkManager _nnManager;
 
         public TestPipeline(
             IRuleLabelsRetriever labelsRetriever,
@@ -33,7 +34,8 @@ namespace AccordTest.Pipeline
             IWordsRetriever wordsRetriever,
             IWordListManager wordListManager,
             IWordListRetriever wordListRetriever, 
-            IFeaturesRetriever featuresRetriever)
+            IFeaturesRetriever featuresRetriever,
+            INeuralNetworkManager nnManager)
         {
             _labelsRetriever = labelsRetriever;
             _queriesRetriever = queriesRetriever;
@@ -44,6 +46,7 @@ namespace AccordTest.Pipeline
             _wordListRetriever = wordListRetriever;
             _wordListManager = wordListManager;
             _featuresRetriever = featuresRetriever;
+            _nnManager = nnManager;
         }
 
         public void Train(Policy[] policies)
@@ -82,7 +85,33 @@ namespace AccordTest.Pipeline
 
         public double Predict(Policy policy, string interactionId)
         {
-            throw new NotImplementedException();
+            // Feature retrieving
+            string policyName = policy.Name;
+            string ruleName = policy.RuleNames[0];
+
+            string[] queries = _queriesRetriever.RetrieveQueriesFor(policyName, ruleName);
+
+            string[] rawContents = _contentRetriever.RetrieveContents(queries);
+
+            string[] rawContentsContext = _contextRetriever.RetrieveContentContext(rawContents);
+
+            string[] preprocessedContents = _preprocessor.PreprocessContents(rawContentsContext);
+
+            CountedWord[] interactionsWords = _wordsRetriever.RetrieveWords(preprocessedContents);
+
+            string[] wordList = _wordListManager.Get(policyName, ruleName);
+
+            if (wordList == null)
+            {
+                wordList = _wordListRetriever.RetrieveWordList(interactionsWords);
+                _wordListManager.Save(policyName, ruleName, wordList);
+            }
+
+            double[][] features = _featuresRetriever.RetrieveFeatures(interactionsWords, wordList);
+            double[] labels = _labelsRetriever.RetrieveRuleLabes(policyName, ruleName);
+
+            //Train here
+            return 1;
         }
 
         public void Forget(Policy policy)
