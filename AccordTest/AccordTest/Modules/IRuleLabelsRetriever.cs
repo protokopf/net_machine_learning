@@ -5,6 +5,6 @@
     /// </summary>
     public interface IRuleLabelsRetriever
     {
-        double[] RetrieveRuleLabes(string ruleName);
+        double[] RetrieveRuleLabes(string policyName, string ruleName);
     }
 }
