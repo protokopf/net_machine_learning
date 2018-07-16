@@ -20,6 +20,7 @@ namespace AccordTest.Pipeline
         private readonly IContentContextRetriever _contextRetriever;
         private readonly IContentPreprocessor _preprocessor;
         private readonly IWordsRetriever _wordsRetriever;
+        private readonly IWordListManager _wordListManager;
         private readonly IWordListRetriever _wordListRetriever;
         private readonly IFeaturesRetriever _featuresRetriever;
 
@@ -29,7 +30,8 @@ namespace AccordTest.Pipeline
             IContentRetriever contentRetriever, 
             IContentContextRetriever contextRetriever, 
             IContentPreprocessor preprocessor, 
-            IWordsRetriever wordsRetriever, 
+            IWordsRetriever wordsRetriever,
+            IWordListManager wordListManager,
             IWordListRetriever wordListRetriever, 
             IFeaturesRetriever featuresRetriever)
         {
@@ -40,6 +42,7 @@ namespace AccordTest.Pipeline
             _preprocessor = preprocessor;
             _wordsRetriever = wordsRetriever;
             _wordListRetriever = wordListRetriever;
+            _wordListManager = wordListManager;
             _featuresRetriever = featuresRetriever;
         }
 
@@ -61,19 +64,16 @@ namespace AccordTest.Pipeline
 
                     CountedWord[] interactionsWords = _wordsRetriever.RetrieveWords(preprocessedContents);
 
-                    // Word list should be savedfor rule as well as network.
-                    string[] wordList = null; //Try retrieve  word list for rule from file system.
+                    string[] wordList = _wordListManager.Get(policy.Name, ruleName);
 
                     if (wordList == null)
                     {
                         wordList = _wordListRetriever.RetrieveWordList(interactionsWords);
-                        //Save word list for this rule.
+                        _wordListManager.Save(policy.Name, ruleName, wordList);
                     }
 
                     double[][] features = _featuresRetriever.RetrieveFeatures(interactionsWords, wordList);
-                    double[] labels = _labelsRetriever.RetrieveRuleLabes(ruleName);
-
-
+                    double[] labels = _labelsRetriever.RetrieveRuleLabes(policy.Name, ruleName);
 
                     //Train here
                 }

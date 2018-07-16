@@ -88,6 +88,7 @@
     <Compile Include="Modules\IFeaturesRetriever.cs" />
     <Compile Include="Modules\IRuleLabelsRetriever.cs" />
     <Compile Include="Modules\IRuleQueriesRetriever.cs" />
+    <Compile Include="Modules\IWordListManager.cs" />
     <Compile Include="Modules\IWordListRetriever.cs" />
     <Compile Include="Modules\IWordsRetriever.cs" />
     <Compile Include="Pipeline\ILearningPipeline.cs" />
